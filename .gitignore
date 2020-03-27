@@ -1,0 +1,5 @@
+.idea
+*.iml
+lib
+src/main/resources/db.properties
+target

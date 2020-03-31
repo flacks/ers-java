@@ -5,6 +5,8 @@ import com.revature.models.LoginTemplate;
 import com.revature.models.User;
 import com.revature.repo.UserDAOImpl;
 import com.revature.util.PBKDF2Hasher;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -13,6 +15,8 @@ public class LoginService {
     private static UserDAOImpl userDAO = new UserDAOImpl();
     private static ObjectMapper objectMapper = new ObjectMapper();
 
+    private static Logger logger = LogManager.getLogger(LoginService.class);
+
     public static LoginService getInstance() {
         if (instance == null) instance = new LoginService();
 
@@ -20,14 +24,18 @@ public class LoginService {
     }
 
     public String tryLogin(String json) throws IOException {
-        LoginTemplate template = objectMapper.readValue(json, LoginTemplate.class);
-        User user = userDAO.getUserByUsername(template.getUsername());
+        LoginTemplate loginTemplate = objectMapper.readValue(json, LoginTemplate.class);
+        User user = userDAO.getUserByUsername(loginTemplate.getUsername());
 
-        PBKDF2Hasher hasher = new PBKDF2Hasher();
-        if (hasher.checkPassword(template.getPassword().toCharArray(), user.getPassword())) {
-            return objectMapper.writeValueAsString(user);
+        if (user != null) {
+            PBKDF2Hasher hasher = new PBKDF2Hasher();
+            if (hasher.checkPassword(loginTemplate.getPassword().toCharArray(), user.getPassword())) {
+                logger.info("Login authorized: " + loginTemplate.getUsername());
+                return objectMapper.writeValueAsString(user);
+            }
         }
 
+        logger.warn("Login denied: " + loginTemplate.getUsername());
         return null;
     }
 }

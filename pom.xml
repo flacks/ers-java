@@ -29,8 +29,8 @@
   </repositories>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/junit/junit -->
     <dependency>
-      <!-- https://mvnrepository.com/artifact/junit/junit -->
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13</version>
@@ -62,7 +62,6 @@
       <groupId>javax</groupId>
       <artifactId>javaee-api</artifactId>
       <version>8.0.1</version>
-      <!--            <scope>provided</scope>-->
     </dependency>
 
     <dependency>
@@ -80,7 +79,7 @@
 
   <build>
     <finalName>ERS</finalName>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    <pluginManagement>
       <plugins>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>

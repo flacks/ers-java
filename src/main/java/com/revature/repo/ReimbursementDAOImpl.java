@@ -2,6 +2,8 @@ package com.revature.repo;
 
 import com.revature.models.Reimbursement;
 import com.revature.util.ConnectionUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.util.List;
 
 public class ReimbursementDAOImpl implements ReimbursementDAO {
     private static UserDAOImpl userDAO = new UserDAOImpl();
+
+    private static Logger logger = LogManager.getLogger(ReimbursementDAOImpl.class);
 
     @Override
     public Reimbursement getReimbById(int reimbId) {
@@ -64,9 +68,11 @@ public class ReimbursementDAOImpl implements ReimbursementDAO {
                         typeId
                 );
 
+                logger.info("Successfully retrieved reimbursement by ID");
                 return reimbursement;
             }
         } catch (SQLException | IOException e) {
+            logger.error("Error retrieving reimbursement by ID: " + e);
             e.printStackTrace();
         }
 
@@ -132,8 +138,10 @@ public class ReimbursementDAOImpl implements ReimbursementDAO {
                 reimbursementList.add(reimbursement);
             }
 
+            logger.info("Successfully retrieved list of reimbursements by user ID");
             return reimbursementList;
         } catch (SQLException | IOException e) {
+            logger.error("Error retrieving list of reimbursements by user ID: " + e);
             e.printStackTrace();
         }
 
@@ -195,8 +203,10 @@ public class ReimbursementDAOImpl implements ReimbursementDAO {
                 reimbursementList.add(reimbursement);
             }
 
+            logger.info("Successfully retrieved list of reimbursements");
             return reimbursementList;
         } catch (SQLException | IOException e) {
+            logger.error("Error retrieving list of reimbursements: " + e);
             e.printStackTrace();
         }
 
@@ -230,8 +240,12 @@ public class ReimbursementDAOImpl implements ReimbursementDAO {
             statement.setInt(5, 1);
             statement.setInt(6, reimbursement.getTypeId());
 
-            if (statement.executeUpdate() > 0) return true;
+            if (statement.executeUpdate() > 0) {
+                logger.info("Reimbursement creation successful");
+                return true;
+            }
         } catch (SQLException e) {
+            logger.error("Error creating reimbursement: " + e);
             e.printStackTrace();
         }
 
@@ -254,8 +268,12 @@ public class ReimbursementDAOImpl implements ReimbursementDAO {
             statement.setInt(2, reimbursement.getResolver().getUserId());
             statement.setInt(3, reimbursement.getReimbId());
 
-            if (statement.executeUpdate() > 0) return true;
+            if (statement.executeUpdate() > 0) {
+                logger.info("Reimbursement update successful");
+                return true;
+            }
         } catch (SQLException e) {
+            logger.error("Error updating reimbursement: " + e);
             e.printStackTrace();
         }
 

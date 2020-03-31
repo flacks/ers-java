@@ -1,5 +1,8 @@
 package com.revature.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -9,6 +12,7 @@ import java.util.Properties;
 
 public class ConnectionUtil {
     private static Connection connection = null;
+    private static Logger logger = LogManager.getLogger(ConnectionUtil.class);
 
     private ConnectionUtil() {
         super();
@@ -32,7 +36,10 @@ public class ConnectionUtil {
                 credentials[0] = properties.getProperty("database");
                 credentials[1] = properties.getProperty("username");
                 credentials[2] = properties.getProperty("password");
+
+                logger.info("Loaded database credentials");
             } catch (IOException e) {
+                logger.error("Error trying to load database credentials: " + e);
                 e.printStackTrace();
             }
 
@@ -41,7 +48,10 @@ public class ConnectionUtil {
                     credentials[1],
                     credentials[2]
             );
+
+            logger.info("Connected to database");
         } catch (ClassNotFoundException | SQLException e) {
+            logger.error("Error getting connection to database: " + e);
             e.printStackTrace();
         }
 

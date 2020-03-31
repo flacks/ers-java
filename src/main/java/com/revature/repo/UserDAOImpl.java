@@ -3,12 +3,16 @@ package com.revature.repo;
 import com.revature.enums.user.Role;
 import com.revature.models.User;
 import com.revature.util.ConnectionUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
+    private static Logger logger = LogManager.getLogger(UserDAOImpl.class);
+
     @Override
     public User getUserById(int userId) {
         try (Connection connection = ConnectionUtil.getConnection()) {
@@ -38,9 +42,11 @@ public class UserDAOImpl implements UserDAO {
                         Role.values()[roleId - 1]
                 );
 
+                logger.info("Fetched user by ID: " + user.getUserId());
                 return user;
             }
         } catch (SQLException e) {
+            logger.error("Error getting user by ID: " + e);
             e.printStackTrace();
         }
 
@@ -76,9 +82,11 @@ public class UserDAOImpl implements UserDAO {
                         Role.values()[roleId - 1]
                 );
 
+                logger.info("Fetched user by username: " + user.getUsername());
                 return user;
             }
         } catch (SQLException e) {
+            logger.error("Error getting user by username: " + e);
             e.printStackTrace();
         }
 
@@ -118,8 +126,10 @@ public class UserDAOImpl implements UserDAO {
                 userList.add(user);
             }
 
+            logger.info("Fetched list of all users");
             return userList;
         } catch (SQLException e) {
+            logger.error("Error getting list of all users: " + e);
             e.printStackTrace();
         }
 
